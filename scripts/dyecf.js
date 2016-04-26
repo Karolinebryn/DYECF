@@ -1,47 +1,48 @@
-var dyecfGame = {
+var DYECF = {
     context: null,
     bgImage: null,
     bgReady: false,
     then: null,
-    initGame: function(container){
+    init: function(container){
         var canvas = document.createElement("canvas");
-        dyecfGame.context = canvas.getContext("2d");
+        DYECF.context = canvas.getContext("2d");
         canvas.width = 512;
         canvas.height = 480;
         container.appendChild(canvas);
         
-        dyecfGame.initBackgroundImage();
+        DYECF.initBackgroundImage();
     },
     initBackgroundImage: function() {
-        dyecfGame.bgImage = new Image();
-        dyecfGame.bgImage.onload = function(){
-            dyecfGame.bgReady = true;
+        DYECF.bgImage = new Image();
+        DYECF.bgImage.onload = function(){
+            DYECF.bgReady = true;
         };
         
-        dyecfGame.bgImage.src = "images/background.png";
+        DYECF.bgImage.src = "images/background.png";
     },
     render: function(){
-        if(dyecfGame.bgReady){
-            dyecfGame.context.drawImage(dyecfGame.bgImage, 0, 0);
+        if(DYECF.bgReady){
+            DYECF.context.drawImage(DYECF.bgImage, 0, 0);
         }
     },
     main: function(){
         var now = Date.now();
-        var delta = now - dyecfGame.then;
+        var delta = now - DYECF.then;
 
-        dyecfGame.render();
-        dyecfGame.then = now;
+        DYECF.render();
+        DYECF.then = now;
         //Request to do this again ASAP
-        dyecfGame.requestAnimationFrame(dyecfGame.main);
+        DYECF.requestAnimationFrame(DYECF.main);
     },
     requestAnimationFrame: function(func1){
         var w = window;
         requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;  
         requestAnimationFrame(func1);
     },
-    startGame: function(){
-        dyecfGame.then = Date.now();
-        dyecfGame.main();
+    startGame: function(container){
+        DYECF.init(container);
+        DYECF.then = Date.now();
+        DYECF.main();
     }
 };
     
