@@ -73,36 +73,39 @@ var DYECF = (function () {
     
     var update = function(modifier){
         if(38 in keysDown){ //player holding up
-            crossfiter.y -= crossfiter.speed * modifier;
+            var pixelsToMove = crossfiter.y - (crossfiter.speed * modifier);
+            crossfiter.y = pixelsToMove < 0 ? 0 : pixelsToMove;
         }
             
         if(40 in keysDown){ //player holding down
-            crossfiter.y += crossfiter.speed * modifier;
+            var pixelsToMove = crossfiter.y + (crossfiter.speed * modifier);
+            crossfiter.y = pixelsToMove > canvas.height - 32 ? canvas.height - 32 : pixelsToMove;
         }
             
         if(37 in keysDown){ //player holding left
-            crossfiter.x -= crossfiter.speed * modifier;
+            var pixelsToMove = crossfiter.x - (crossfiter.speed * modifier);
+            crossfiter.x = pixelsToMove < 0 ? 0 : pixelsToMove;
         }
             
         if(39 in keysDown){ //player holding right
-            crossfiter.x += crossfiter.speed * modifier;
+            var pixelsToMove = crossfiter.x + (crossfiter.speed * modifier);
+            crossfiter.x = pixelsToMove > canvas.width - 32 ? canvas.width - 32 : pixelsToMove;
         } 
         
-        //Are they touching?
+        //crossfiter is reaching barbell
         if(
             crossfiter.x <= (barbell.x + 32) 
             && barbell.x <= (crossfiter.x + 32) 
             && crossfiter.y <= (barbell.y + 32) 
-            && barbell.y <= (crossfiter.y + 32)
-        ){
+            && barbell.y <= (crossfiter.y + 32) ){
             ++crossfiter.score;
             reset();
-        }         
+        }      
     };
     
     var reset = function(){
-        barbell.x = 32 + (Math.random() * (canvas.width - 32));
-        barbell.y = 32 + (Math.random() * (canvas.height - 32));
+        barbell.x = Math.random() * (canvas.width - 32);
+        barbell.y = Math.random() * (canvas.height - 32);
     };
     
     var render = function(){
@@ -110,8 +113,8 @@ var DYECF = (function () {
         context.drawImage(crossfiter.image, crossfiter.x, crossfiter.y);
         context.drawImage(barbell.image, barbell.x, barbell.y);
         
-        context.fillStyle = "rgb(250, 250, 250)";
-        context.front = "24px Helvetica";
+        context.fillStyle = "rgb(0, 0, 0)";
+        context.front = "32px Helvetica";
         context.textAlign = "left";
         context.textBaseline = "top";
         context.fillText("Barbells lifted: " + crossfiter.score, 10, 10);
