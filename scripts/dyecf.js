@@ -1,6 +1,6 @@
 var DYECFObj = DYECFObj || {};
 
-var workoutGearImages = ["images/barbell.png", "images/kettlebell.png"];
+var workoutGearImages = ["images/barbell.png", "images/kettlebell.png", "images/rack.png"];
 
 DYECFObj.crossfiter = function(){
     this.speed = 256;
