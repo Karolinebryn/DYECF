@@ -1,5 +1,7 @@
 var DYECFObj = DYECFObj || {};
 
+var workoutGearImages = ["images/barbell.png", "images/kettlebell.png"];
+
 DYECFObj.crossfiter = function(){
     this.speed = 256;
     this.x = 480;
@@ -13,22 +15,23 @@ DYECFObj.crossfiter.prototype.setImage = function(imagePath){
     this.image.src = imagePath;  
 };
 
-DYECFObj.barbell = function(){
+DYECFObj.workoutGear = function(){
     this.x = 0;
     this.y = 0;
     this.image = null;
 };
 
-DYECFObj.barbell.prototype.setImage = function (imagePath) {
+DYECFObj.workoutGear.prototype.setRandomImage = function () {
+    var random = Math.floor(Math.random() * (workoutGearImages.length));
     this.image = new Image();
-    this.image.src = imagePath;
+    this.image.src = workoutGearImages[random];
 };
 
 var DYECF = (function () {  
     var context = null;
     var canvas = null;
     var crossfiter = null;
-    var barbell = null;
+    var workoutGear = null;
     var bgImage = null;
     var then = null;
     var keysDown = {};
@@ -42,7 +45,7 @@ var DYECF = (function () {
         
         initBackgroundImage();
         initCrossfiter();
-        initBarbell();
+        initWorkoutGear();
         addEventListeners();
     };
     
@@ -61,9 +64,9 @@ var DYECF = (function () {
         crossfiter.setImage("images/crossfiter.png");
     };
     
-    var initBarbell = function(){
-        barbell = new DYECFObj.barbell();
-        barbell.setImage("images/barbell.png");
+    var initWorkoutGear = function(){
+        workoutGear = new DYECFObj.workoutGear();      
+        workoutGear.setRandomImage();
     };
     
     var initBackgroundImage = function() {
@@ -92,32 +95,33 @@ var DYECF = (function () {
             crossfiter.x = pixelsToMove > canvas.width - 32 ? canvas.width - 32 : pixelsToMove;
         } 
         
-        //crossfiter is reaching barbell
+        //crossfiter is reaching workoutGear
         if(
-            crossfiter.x <= (barbell.x + 32) 
-            && barbell.x <= (crossfiter.x + 32) 
-            && crossfiter.y <= (barbell.y + 32) 
-            && barbell.y <= (crossfiter.y + 32) ){
+            crossfiter.x <= (workoutGear.x + 32) 
+            && workoutGear.x <= (crossfiter.x + 32) 
+            && crossfiter.y <= (workoutGear.y + 32) 
+            && workoutGear.y <= (crossfiter.y + 32) ){
             ++crossfiter.score;
             reset();
         }      
     };
     
     var reset = function(){
-        barbell.x = Math.random() * (canvas.width - 32);
-        barbell.y = Math.random() * (canvas.height - 32);
+        workoutGear.x = Math.random() * (canvas.width - 32);
+        workoutGear.y = Math.random() * (canvas.height - 32);
+        workoutGear.setRandomImage();
     };
     
     var render = function(){
         context.drawImage(bgImage, 0, 0);    
         context.drawImage(crossfiter.image, crossfiter.x, crossfiter.y);
-        context.drawImage(barbell.image, barbell.x, barbell.y);
+        context.drawImage(workoutGear.image, workoutGear.x, workoutGear.y);
         
         context.fillStyle = "rgb(0, 0, 0)";
         context.front = "32px Helvetica";
         context.textAlign = "left";
         context.textBaseline = "top";
-        context.fillText("Barbells lifted: " + crossfiter.score, 10, 10);
+        context.fillText("Movements performed: " + crossfiter.score, 10, 10);
     };
     
     var main = function(){
